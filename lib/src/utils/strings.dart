@@ -1,0 +1,10 @@
+const appName = "Tasky";
+const addNewTask = "Add New Task";
+const taskTitle = "Task Title";
+const setPriority = "Set as priority";
+const taskTitleHint = "Enter task title";
+const noTask = "No tasks found";
+String taskLength(int count) => "$count Tasks";
+const save = "Save";
+const delete = "Delete";
+const taskEmptyErrorMessage = "Task title cannot be empty";
