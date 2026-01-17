@@ -1,43 +1,70 @@
 name: Flutter CI/CD
 
-# Trigger workflow only when code is merged into main branch
+# Trigger only on PRs to main branch
 on:
-  push:
+  pull_request:
     branches:
-      - main   # Only trigger CI/CD when main is updated
+      - main
 
 jobs:
   build_test:
     runs-on: ubuntu-latest
+
     steps:
-      # Checkout code
+      # 1️⃣ Checkout code
       - uses: actions/checkout@v3
 
-      # Set up Flutter
+      # 2️⃣ Set up Flutter
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.5'
+          flutter-version: '3.22.3' # your Flutter version
 
-      # Install dependencies
+      # 3️⃣ Install dependencies
       - name: Install Dependencies
         run: flutter pub get
 
-      # Check code format
+      # 4️⃣ Format check
       - name: Format Check
         run: flutter format --set-exit-if-changed .
 
-      # Run Dart analyzer
+      # 5️⃣ Analyze code
       - name: Analyze Code
         run: flutter analyze
 
-      # Run unit tests with coverage
+      # 6️⃣ Check for duplicate strings (using `flutter_lints` warnings + custom script)
+      - name: Duplicate Strings Check
+        run: |
+          echo "Checking for duplicate strings..."
+          grep -rhoP "['\"](.+?)['\"]" lib/ | sort | uniq -d | tee dup_strings.txt
+          if [ -s dup_strings.txt ]; then
+            echo "Duplicate strings found!"
+            cat dup_strings.txt
+            exit 1
+          else
+            echo "No duplicates found."
+          fi
+
+      # 7️⃣ Run tests and generate coverage
       - name: Run Tests
         run: flutter test --coverage
 
-      # Generate HTML coverage report
+      # 8️⃣ Install lcov for coverage reporting
+      - name: Install lcov
+        run: sudo apt-get install -y lcov
+
+      # 9️⃣ Generate coverage report
       - name: Generate Coverage Report
         run: |
-          sudo apt-get update
-          sudo apt-get install -y lcov
           genhtml coverage/lcov.info --output-directory coverage/html
+          echo "Coverage report generated at coverage/html/index.html"
+
+      # 🔟 Optional: Fail if coverage < 80%
+      - name: Check Coverage Threshold
+        run: |
+          COVERAGE=$(lcov --summary coverage/lcov.info | grep lines | awk '{print $2}' | tr -d '%')
+          echo "Total coverage: $COVERAGE%"
+          if (( $(echo "$COVERAGE < 80" | bc -l) )); then
+            echo "Coverage is below 80%!"
+            exit 1
+          fi
