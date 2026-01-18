@@ -25,8 +25,13 @@ class TaskListByDatePage extends StatelessWidget {
           .toList();
 
       return Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: CustomText(text: "${date.day}-${date.month}-${date.year}"),
+          backgroundColor: Colors.white,
+          title: CustomText(
+            text: "${date.day}-${date.month}-${date.year}",
+            textStyle: kAppTitleStyle20,
+          ),
         ),
         body: ListView.builder(
           itemCount: tasks.length,
