@@ -16,13 +16,39 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<TaskController>();
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        title: const CustomText(text: appName),
+        backgroundColor: Colors.white,
+        title: const CustomText(
+          text: appName,
+          textStyle: kTitleStyle,
+        ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showAddTaskSheet(context),
-        child: const Icon(Icons.add),
+      floatingActionButton: Container(
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            gradient: const LinearGradient(
+              colors: [Color(0xFF6A5AE0), Color(0xFF8F7CFF)],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.25),
+                blurRadius: 12,
+                offset: const Offset(0, 6),
+              ),
+            ]),
+        child: FloatingActionButton(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          onPressed: () => _showAddTaskSheet(context),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
       ),
       body: Obx(() {
         final grouped = controller.groupedTasks();
@@ -48,7 +74,8 @@ class HomePage extends StatelessWidget {
                 Get.to(() => TaskListByDatePage(date: date));
               },
               child: Card(
-                elevation: 3,
+                elevation: 5,
+                color: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12)),
                 child: Padding(
@@ -82,6 +109,7 @@ class HomePage extends StatelessWidget {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      backgroundColor: Colors.white,
       builder: (_) => const CustomBottomSheet(),
     );
   }

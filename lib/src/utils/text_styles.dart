@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 const kTitleStyle = TextStyle(
-  fontSize: 18,
+  fontSize: 24,
   fontWeight: FontWeight.bold,
 );
 
@@ -20,3 +20,10 @@ TextStyle taskTextStyle({
     fontWeight: isPriority ? FontWeight.bold : FontWeight.normal,
   );
 }
+
+const kTaskWhite16Style = TextStyle(fontSize: 16, color: Colors.white);
+
+const kAppTitleStyle20 = TextStyle(
+  fontSize: 20,
+  fontWeight: FontWeight.bold,
+);
